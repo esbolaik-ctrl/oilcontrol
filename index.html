@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1728">
+<meta name="description" content="OilControl — мұнай-газ өндірісін бақылауға арналған оқу прототипі">
+<title>OilControl — Өндірісті басқару</title>
+<style>
+:root{--bg:#0b1728;--panel:#14243a;--panel2:#1a2e48;--green:#24c78a;--muted:#9baec4;--white:#f4f7fb;--red:#ff6262;--amber:#ffc15a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:760px;margin:auto;padding:env(safe-area-inset-top) 16px calc(18px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;padding:20px 2px 16px;gap:10px}
+.brand{color:var(--green);font-size:12px;font-weight:800;letter-spacing:2px}.subtitle{font-size:19px;font-weight:750;margin-top:3px}
+.pill{font-size:10px;color:var(--green);background:#173d35;border-radius:30px;padding:8px 10px;white-space:nowrap}
+nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:4px 0 18px}
+nav button{border:0;border-radius:12px;padding:11px 3px;background:var(--panel);color:var(--muted);font-size:11px;font-weight:700}
+nav button.active{background:var(--green);color:var(--bg)}
+h1{font-size:23px;margin:4px 0} .hint{color:var(--muted);font-size:12px;margin:4px 0 15px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:var(--panel);border-radius:16px;padding:15px;margin-bottom:11px}
+.label{color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.5px}
+.value{font-size:28px;font-weight:800;margin:8px 0 2px}.unit{font-size:11px;color:var(--green)}
+.bar{height:4px;border-radius:8px;background:#263a52;margin-top:12px;overflow:hidden}.bar span{display:block;height:100%;width:68%;background:var(--green);border-radius:8px}
+.section{font-size:16px;font-weight:800;margin:7px 0 10px}
+.status{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.status small{display:block;color:var(--muted);margin-top:4px}.dot{font-size:22px;color:var(--green)}
+.notice{background:#3a2a20;border-radius:14px;padding:14px;color:var(--amber);font-size:12px;line-height:1.5;margin-top:4px}
+.btn{width:100%;border:0;border-radius:11px;padding:12px;font-weight:800;margin-top:12px;background:var(--green);color:var(--bg);font-size:13px}
+.btn.stop{background:var(--red)}.muted{color:var(--muted)}.alert{display:flex;gap:12px;align-items:flex-start}.bullet{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:none}
+footer{text-align:center;color:var(--muted);font-size:10px;padding:14px 0 5px}
+[hidden]{display:none!important}
+@media(min-width:600px){.app{padding-left:24px;padding-right:24px}.value{font-size:32px}nav button{font-size:13px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div><div class="brand">OILCONTROL</div><div class="subtitle">Өндірісті басқару жүйесі</div></div><div class="pill">● ЖҮЙЕ БЕЛСЕНДІ</div></header>
+<nav aria-label="Негізгі мәзір">
+<button class="active" data-page="home">Басты бет</button><button data-page="equipment">Жабдықтар</button><button data-page="alerts">Ескертулер</button><button data-page="reports">Есеп</button>
+</nav>
+<main>
+<section id="home">
+<h1>Қайырлы күн!</h1><p class="hint">Өндірістік нысанның ағымдағы көрсеткіштері</p>
+<div class="grid">
+<div class="card"><div class="label">ҚЫСЫМ</div><div class="value">5.2</div><div class="unit">бар</div><div class="bar"><span></span></div></div>
+<div class="card"><div class="label">ТЕМПЕРАТУРА</div><div class="value">75</div><div class="unit">°C</div><div class="bar"><span style="width:75%;background:var(--amber)"></span></div></div>
+<div class="card"><div class="label">АҒЫН ЖЫЛДАМДЫҒЫ</div><div class="value">18.4</div><div class="unit">м³/сағ</div><div class="bar"></div></div>
+<div class="card"><div class="label">ӨНДІРУ КӨЛЕМІ</div><div class="value">1 240</div><div class="unit">м³ / тәулік</div><div class="bar"></div></div>
+</div>
+<div class="section">Жабдықтардың күйі</div>
+<div class="card status"><div><b>Сорғы №1</b><small id="home-p1">Жұмыс істеп тұр</small></div><span class="dot" id="dot-p1">●</span></div>
+<div class="card status"><div><b>Сорғы №2</b><small id="home-p2">Тоқтатылған</small></div><span class="dot" id="dot-p2" style="color:var(--muted)">○</span></div>
+<div class="notice"><b>ҚАУІПСІЗДІК АҚПАРАТЫ</b><br>Барлық көрсеткіштер демонстрациялық. Нақты датчиктерден алынбаған.</div>
+</section>
+<section id="equipment" hidden>
+<h1>Жабдықтарды басқару</h1><p class="hint">Басқару батырмалары тек осы прототип ішінде жұмыс істейді.</p>
+<div class="card"><b>Сорғы №1</b><p class="hint" id="state-p1">Күйі: Жұмыс істеп тұр</p><button class="btn stop" id="toggle-p1">ТОҚТАТУ</button></div>
+<div class="card"><b>Сорғы №2</b><p class="hint" id="state-p2">Күйі: Тоқтатылған</p><button class="btn" id="toggle-p2">ІСКЕ ҚОСУ</button></div>
+<div class="notice">НАЗАР АУДАРЫҢЫЗ: Бұл демонстрациялық басқару. Нақты сорғыларға команда жіберілмейді.</div>
+</section>
+<section id="alerts" hidden>
+<h1>Хабарламалар</h1><p class="hint">Жүйе ескертулері мен хабарламалары</p>
+<div class="card alert"><i class="bullet" style="background:var(--green)"></i><div><b>Жүйе күйі қалыпты</b><p class="hint">13:40 • Барлық модульдер байланыста (демо)</p></div></div>
+<div class="card alert"><i class="bullet" style="background:var(--amber)"></i><div><b>Жоспарлы тексеру</b><p class="hint">Сорғыларды техникалық тексеру қажет</p></div></div>
+<div class="card alert"><i class="bullet" style="background:var(--muted)"></i><div><b>Датчик деректері</b><p class="hint">Көрсеткіштер тестілік режимде берілген</p></div></div>
+</section>
+<section id="reports" hidden>
+<h1>Өндіріс есебі</h1><p class="hint">Демонстрациялық статистика</p>
+<div class="card"><div class="label">ТӘУЛІКТІК ӨНДІРУ</div><div class="value">1 240</div><div class="unit">м³</div></div>
+<div class="card"><div class="label">АПТАЛЫҚ ӨНДІРУ</div><div class="value">8 420</div><div class="unit">м³</div></div>
+<div class="card"><b>Жалпы жүйе күйі</b><p class="hint">• Қысым: қалыпты (демо)<br>• Температура: бақылауда (демо)<br>• Жабдықтар: 1/2 сорғы іске қосулы</p></div>
+</section>
+</main>
+<footer>ДЕМО РЕЖИМІ • Нақты өндірістік жүйеге қосылмаған</footer>
+</div>
+<script>
+const pages=["home","equipment","alerts","reports"];
+document.querySelectorAll("nav button").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b===btn));
+ pages.forEach(p=>document.getElementById(p).hidden=p!==btn.dataset.page);
+}));
+const pumps={p1:true,p2:false};
+function renderPump(id){
+ const on=pumps[id], n=id==="p1"?"1":"2";
+ document.getElementById("home-"+id).textContent=on?"Жұмыс істеп тұр":"Тоқтатылған";
+ document.getElementById("dot-"+id).textContent=on?"●":"○";
+ document.getElementById("dot-"+id).style.color=on?"var(--green)":"var(--muted)";
+ document.getElementById("state-"+id).textContent="Күйі: "+(on?"Жұмыс істеп тұр":"Тоқтатылған");
+ const b=document.getElementById("toggle-"+id);b.textContent=on?"ТОҚТАТУ":"ІСКЕ ҚОСУ";b.classList.toggle("stop",on);
+}
+["p1","p2"].forEach(id=>document.getElementById("toggle-"+id).addEventListener("click",()=>{pumps[id]=!pumps[id];renderPump(id)}));
+</script>
+</body></html>
